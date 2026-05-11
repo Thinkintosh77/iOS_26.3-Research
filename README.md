@@ -22,8 +22,8 @@ A Public Open-Source research framework with `.py` and `.sh` files created for a
 
 | Device | Chipset | iOS Version | Status |
 | :--- | :--- | :--- | :--- |
-| iPad Pro 11" (2018) | A12Z Bionic | 26.1 | Bypassed (Reference State) |
-| iPad Pro 11" (2018) | A12Z Bionic | 26.3 | Testing (Active) |
+| iPad Pro 11" (2018) | A12X Bionic | 26.1 | Bypassed (Reference State) |
+| iPad Pro 11" (2018) | A12X Bionic | 26.3 | Testing (Active) |
 | iPad Air 4 | A14 Bionic | 26.3 | Testing (Active) |
 
 ---
