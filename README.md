@@ -61,6 +61,10 @@ Apple has deprecated several legacy commands and hardened the activation flow:
 *   **Concept:** Binary diffing `mobileactivationd` from iOS 26.1 vs 26.3.
 *   **Goal:** Locate the exact branch logic for the `-1 Nonce Error` and identify potential "fail-open" conditions.
 
+### Path 5: Workspace Logic Suppression
+*  **Concept:** Utilizing the CVE-2026-20700 (dyld) vulnerability to bypass the SpringBoard "not activated" check.
+*   If the activation-related state check in SBMainWorkspace can be flipped in memory, the device may boot to the Home Screen (Partial Bypass).
+
 ---
 
 ## Tooling: The Overlord Framework
