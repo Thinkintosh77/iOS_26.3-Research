@@ -98,10 +98,10 @@ The project utilizes a custom Python-based framework (`overlord.py`) designed fo
 3.  **Syslog Monitoring:** Map `mobileactivationd` error codes to specific binary offsets identified in Path 4.
 
 ---
-## Setup
-* **1. Open Terminal and enter the following command:**
+# 1. Open Terminal and enter the following command:**
     'openssl ecparam -name prime256v1 -genkey -noout -out root_ca.key'
-This generates a private key using the NIST P-256 elliptic curve
+* **This generates a private key using the NIST P-256 elliptic curve**
+
 # 2. Creating the Root Certificate
     'openssl req -x509 -new -nodes -key root_ca.key -sha256 -days 3650 -out root_ca.crt'
   **This turns your private key into a "Birth Certificate" for your fake server.**
