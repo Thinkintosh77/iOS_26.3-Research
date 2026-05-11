@@ -88,43 +88,35 @@ The project utilizes a custom Python-based framework (`overlord.py`) designed fo
 3.  **Syslog Monitoring:** Map `mobileactivationd` error codes to specific binary offsets identified in Path 4.
 
 ---
-
 ## Setup
-1. **Open Terminal and enter the following command:
-'openssl ecparam -name prime256v1 -genkey -noout -out root_ca.key'
-**What it does: Generates a private key using the NIST P-256 elliptic curve
-
-2. **Creating the Root Certificate
-'openssl req -x509 -new -nodes -key root_ca.key -sha256 -days 3650 -out root_ca.crt'
-**What it does: Turns your private key into a "Birth Certificate" for your fake server.
-
-3. **Identify the Target
+# 1. Open Terminal and enter the following command:
+    'openssl ecparam -name prime256v1 -genkey -noout -out root_ca.key'
+This generates a private key using the NIST P-256 elliptic curve
+# 2. Creating the Root Certificate
+    'openssl req -x509 -new -nodes -key root_ca.key -sha256 -days 3650 -out root_ca.crt'
+  # This turns your private key into a "Birth Certificate" for your fake server.
+# 3. Identify the Target
      'idevice_id -l'
-
-4. **Querying Lockdown State.
+# 4. Querying Lockdown State.
      'ideviceinfo -q com.apple.mobile.lockdown -k ActivationState'
-   **What it does: Specifically asks the phone it's current activation status.
-
-5. **Starting Activation Services
-   'lockdown = create_using_usbmux() activation_service = MobileActivationService(lockdown)'
-   **creates a bridge to mobileactivationd (the iOS daemon that handles the "Hello" screen).
-
-6. **Setup Nonce Request
-   'session_info = activation_service.get_activation_session_info()'
-   **Requests a Nonce (Number used Once) from the phone
-
+   # This specifically asks the phone it's current activation status.
+# 5. Starting Activation Services
+    'lockdown = create_using_usbmux() activation_service = MobileActivationService(lockdown)'
+   # This creates a bridge to mobileactivationd (the iOS daemon that handles the "Hello" screen).
+# 6. Setup Nonce Request
+    'session_info = activation_service.get_activation_session_info()'
+   # Requests a Nonce (Number used Once) from the phone
 ## Phase 4: Dealing with FDR (Field Data Recovery)
-#Modern iPhones (especially those with FaceID/TouchID) require FDR records
-
-7. 'openssl dgst -sha256 -sign fdr_private.key -out signature.bin hardware_data.plist'
-**What it does: Signs the hardware manifest (serial numbers for your screen, battery, etc.).
-
+# Modern iPhones (especially those with FaceID/TouchID) require FDR records
+    'openssl dgst -sha256 -sign fdr_private.key -out signature.bin hardware_data.plist'
+# Signs the hardware manifest (serial numbers for your screen, battery, etc.).
 ## Phase 5
 # The bypass relies on a timing window where the Setup.app thinks it's activated but SpringBoard (the home screen) hasn't checked yet.
-'idevicesyslog | grep -E "mobileactivationd|SBMainWorkspace"'
+    'idevicesyslog | grep -E "mobileactivationd|SBMainWorkspace" '
+
+---
 
 # Summary Table for Rookies
-
 | Command Prefix | Domain | Purpose |
 | :--- | :--- | :--- |
 | `openssl` | Security | Creating the fake "Apple" keys and certificates. |
