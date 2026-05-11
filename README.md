@@ -15,10 +15,10 @@ A: This project is specifically for A12-A14 (Bionic) chipsets, Support for Newer
 A: No, Currently this is a Tethered bypass, further testing and collaboration will help speed the creation of an Untethered bypass method.
 
 ## Project Overlord: iOS 26.3+ Activation Research
-
 *   **Current Status:** ACTIVE RESEARCH / Live Testing Phase
 *   **Last Updated:** May 12, 2026
 *   **Environment:** Ubuntu 24.04 LTS (Tails-based Workspace)
+*   **Requirements:** 'Flask==3.0.0' & 'ymobiledevice3==2.17.0'
 
 ### Primary Objectives
 
