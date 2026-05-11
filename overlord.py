@@ -113,3 +113,6 @@ if __name__ == "__main__":
     threading.Thread(target=usb_manager, daemon=True).start()
     print("[+] Framework Online. Logs: /logs/traffic_discovery.log")
     app.run(host='0.0.0.0', port=80)
+
+## Coded by Thinkintosh77, Public use no rebranding
+## May/12/2026-2:42AM
