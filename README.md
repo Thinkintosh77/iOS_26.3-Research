@@ -88,3 +88,7 @@ The project utilizes a custom Python-based framework (`overlord.py`) designed fo
 3.  **Syslog Monitoring:** Map `mobileactivationd` error codes to specific binary offsets identified in Path 4.
 
 ---
+
+## Coded by Thinkintosh77, Public use no rebranding
+## May/12/2026-2:42AM
+
