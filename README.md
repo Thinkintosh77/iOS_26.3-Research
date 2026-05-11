@@ -4,6 +4,13 @@ A Public Open-Source research framework with `.py` and `.sh` files created for a
 
 **Disclaimer:** This research is conducted for educational and security analysis purposes only. All testing is performed on owner-controlled hardware.
 
+## Frequently Asked Questions (FAQ)
+**Q: Does this support iOS 18.7.3 or older?**
+A: Not currently. This research targets the hardened security layers of iOS 26.x. Older versions use different activation logic that is not the primary focus of Project Overlord.
+
+**Q: Will this support iPhone X and below?**
+A: This project is specifically for A12-A14 (Bionic) chipsets, Support for Newer Chipsets will be Added. Devices vulnerable to checkm8 (A11 and below) should use legacy tools.
+
 ## Project Overlord: iOS 26.3+ Activation Research
 
 *   **Current Status:** ACTIVE RESEARCH / Live Testing Phase
