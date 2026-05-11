@@ -37,3 +37,6 @@ if __name__ == "__main__":
         print("Usage: python3 fdr_signer.py <input_xml> <fdr_key>")
     else:
         sign_and_generate_plist(sys.argv[1], sys.argv[2])
+
+## Coded by Thinkintosh77, Public use no rebranding
+## May/12/2026-2:42AM
