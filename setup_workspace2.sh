@@ -20,3 +20,7 @@ openssl x509 -req -in certs/albert_spoof.csr -CA certs/MyPrivateCA.pem -CAkey ke
 -CAcreateserial -out certs/albert_spoof.pem -days 365 -sha256
 
 echo "[+] Workspace Ready. Place your 'fdr_local.key' in the /keys folder."
+
+## Coded by Thinkintosh77, Public use no rebranding
+## May/12/2026-2:42AM
+
