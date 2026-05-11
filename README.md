@@ -11,6 +11,9 @@ A: Not currently. This research targets the hardened security layers of iOS 26.x
 **Q: Will this support iPhone X and below?**
 A: This project is specifically for A12-A14 (Bionic) chipsets, Support for Newer Chipsets will be Added. Devices vulnerable to checkm8 (A11 and below) should use legacy tools.
 
+**Q: Is this Tethered or Untethered Bypass?**
+A: No, Currently this is a Tethered bypass, further testing and collaboration will help speed the creation of an Untethered bypass method.
+
 ## Project Overlord: iOS 26.3+ Activation Research
 
 *   **Current Status:** ACTIVE RESEARCH / Live Testing Phase
