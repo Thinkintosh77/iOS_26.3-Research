@@ -107,13 +107,11 @@ This generates a private key using the NIST P-256 elliptic curve
     'session_info = activation_service.get_activation_session_info()'
    **Requests a Nonce (Number used Once) from the phone**
 ## Phase 4: Dealing with FDR (Field Data Recovery)
-* **Modern iPhones (especially those with FaceID/TouchID) require FDR records**
     'openssl dgst -sha256 -sign fdr_private.key -out signature.bin hardware_data.plist'
-  **Signs the hardware manifest (serial numbers for your screen, battery, etc.).**
+**Modern iPhones (especially those with FaceID/TouchID) require FDR records, This signs the hardware manifest (serial numbers for your screen, battery, etc.).**
 ## Phase 5
-* **The bypass relies on a timing window where the Setup.app thinks it's activated but SpringBoard (the home screen) hasn't checked yet.**
     'idevicesyslog | grep -E "mobileactivationd|SBMainWorkspace" '
-
+ * **The bypass relies on a timing window where the Setup.app thinks it's activated but SpringBoard (the home screen) hasn't checked yet.**
 ---
 
 # Summary Table for Rookies
