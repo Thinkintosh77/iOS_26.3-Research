@@ -89,29 +89,29 @@ The project utilizes a custom Python-based framework (`overlord.py`) designed fo
 
 ---
 ## Setup
-# 1. Open Terminal and enter the following command:
+* **1. Open Terminal and enter the following command:**
     'openssl ecparam -name prime256v1 -genkey -noout -out root_ca.key'
 This generates a private key using the NIST P-256 elliptic curve
 # 2. Creating the Root Certificate
     'openssl req -x509 -new -nodes -key root_ca.key -sha256 -days 3650 -out root_ca.crt'
-  # This turns your private key into a "Birth Certificate" for your fake server.
+  **This turns your private key into a "Birth Certificate" for your fake server.**
 # 3. Identify the Target
      'idevice_id -l'
 # 4. Querying Lockdown State.
      'ideviceinfo -q com.apple.mobile.lockdown -k ActivationState'
-   # This specifically asks the phone it's current activation status.
+   **This specifically asks the phone it's current activation status.**
 # 5. Starting Activation Services
     'lockdown = create_using_usbmux() activation_service = MobileActivationService(lockdown)'
-   # This creates a bridge to mobileactivationd (the iOS daemon that handles the "Hello" screen).
+   **This creates a bridge to mobileactivationd (the iOS daemon that handles the "Hello" screen).**
 # 6. Setup Nonce Request
     'session_info = activation_service.get_activation_session_info()'
-   # Requests a Nonce (Number used Once) from the phone
+   **Requests a Nonce (Number used Once) from the phone**
 ## Phase 4: Dealing with FDR (Field Data Recovery)
-# Modern iPhones (especially those with FaceID/TouchID) require FDR records
+* **Modern iPhones (especially those with FaceID/TouchID) require FDR records**
     'openssl dgst -sha256 -sign fdr_private.key -out signature.bin hardware_data.plist'
-# Signs the hardware manifest (serial numbers for your screen, battery, etc.).
+  **Signs the hardware manifest (serial numbers for your screen, battery, etc.).**
 ## Phase 5
-# The bypass relies on a timing window where the Setup.app thinks it's activated but SpringBoard (the home screen) hasn't checked yet.
+* **The bypass relies on a timing window where the Setup.app thinks it's activated but SpringBoard (the home screen) hasn't checked yet.**
     'idevicesyslog | grep -E "mobileactivationd|SBMainWorkspace" '
 
 ---
