@@ -97,3 +97,5 @@ To run a bypass attempt, follow this specific order:
 ## Technical Notes
 * **Hacktivation vs. Tethered:** This tool targets a Hacktivation state. It caches a "Success" ticket in the device's local filesystem to skip the "Hello" screen.
 * **XPC Timeouts:** If the logs show a timeout (especially on 26.4.1+), the USB latency is too high. Ensure you are using high-speed USB-C and the `nice -n -20` priority flag.
+---
+# Created by Thinkintosh77, Public-use no rebranding.
