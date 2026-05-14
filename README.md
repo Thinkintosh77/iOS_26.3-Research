@@ -1,6 +1,6 @@
-# iOS_26.3-Research
+# iOS 26.3/26.3.1 Research 
 
-A Public Open-Source research framework with `.py` and `.sh` files created for analyzing iOS 26.3 security mechanisms. This project is designed to be advanced through the collective intelligence of the setupa12 community.
+This private framework is designed to analyze and exploit the **Gatekeeper Lag** in the iOS activation state machine. By leveraging a high-frequency USB injection race, it allows for research into Hacktivation and state-injection bypasses on A14 and A12X/Z hardware, A Public Open-Source research framework with `.py` and `.sh` files created for analyzing iOS 26.3 security mechanisms. This project is designed to be advanced through the collective intelligence of the setupa12 community.
 
 **Disclaimer:** This research is conducted for educational and security analysis purposes only. All testing is performed on owner-controlled hardware.
 
@@ -13,6 +13,31 @@ A: This project is specifically for A12-A14 (Bionic) chipsets, Support for Newer
 
 **Q: Is this Tethered or Untethered Bypass?**
 A: No, Currently this is a Tethered bypass, further testing and collaboration will help speed the creation of an Untethered bypass method.
+
+---
+
+## Framework Overview (The PT Protocol)
+
+The framework is architected into four distinct modules (PT1-PT4) that work in sequence to trick the iOS kernel and activation daemons.
+
+* **PT4 (The Station):** `setup_workspace2.sh` — The environment architect. It builds the local CA and spoofed SSL certificates.
+* **PT1 (The Ticket):** `generate_payload.py` — The payload printer. It uses your device's SN and UDID to create a structurally valid `activation_record.xml`.
+* **PT2 (The Conductor):** `overlord.py` — The race executioner. A Flask/USB hybrid that sprays the PT1 signature into the USB tunnel.
+* **PT3 (The Departure):** The UI transition. The final phase where the Setup app (`Buddy`) accepts the "Success" flag.
+
+## Script Functionality
+
+### 1. `setup_workspace2.sh` (The Foundation)
+Bypasses the "Invalid Certificate" security check by creating a local Certificate Authority. It forces the device to trust your computer as the primary activation authority (`albert.apple.com`).
+
+### 2. `generate_payload.py` (The Identification)
+Automatically builds the required XML manifest. 
+* **Input:** Serial Number, UDID, and ProductType.
+* **Output:** `payloads/activation_record.xml`.
+* **Logic:** Declares a successful activation state based on the provided hardware IDs.
+
+### 3. `overlord.py` (The Bypass Execution)
+Manages the **USB Race Engine**. On iOS 26.3+, the kernel watches for hangs. This script uses high-priority CPU cycles to inject the activation record during the 2ms window before the `kernel_task` (PID 0) can verify the hardware-level FDR signatures.
 
 ## Project Overlord: iOS 26.3+ Activation Research
 *   **Current Status:** ACTIVE RESEARCH / Live Testing Phase
@@ -53,89 +78,22 @@ Apple has deprecated several legacy commands and hardened the activation flow:
 
 ---
 
-## Active Research Paths
+## Execution Guide (Private CLI)
 
-### Path 1: WebKit RCE & Sandbox Escape
-*   **Concept:** Trigger a memory corruption (e.g., CVE-2026-20352) within the WebSheet process.
-*   **Goal:** Escalate privileges to use the `profiled-access` entitlement to install a custom Root CA, enabling HTTPS interception.
+To run a bypass attempt, follow this specific order:
 
-### Path 2: HTTP Endpoint Discovery
-*   **Concept:** Passive traffic logging to identify any non-HTTPS endpoints in the setup flow.
-*   **Goal:** Inject XML payloads into unencrypted streams to bypass pinning entirely.
-
-### Path 3: TLS Relaxation Window ("Gatekeeper Lag")
-*   **Concept:** Exploiting the momentary relaxation of TLS validation when the device transitions from the Captive Portal to the Setup Assistant.
-*   **Goal:** Catch the transition window to inject activation data before pinning fully engages.
-
-### Path 4: Differential Binary Analysis
-*   **Concept:** Binary diffing `mobileactivationd` from iOS 26.1 vs 26.3.
-*   **Goal:** Locate the exact branch logic for the `-1 Nonce Error` and identify potential "fail-open" conditions.
-
-### Path 5: Workspace Logic Suppression
-*  **Concept:** Utilizing the CVE-2026-20700 (dyld) vulnerability to bypass the SpringBoard "not activated" check.
-*   If the activation-related state check in SBMainWorkspace can be flipped in memory, the device may boot to the Home Screen (Partial Bypass).
-
----
-
-## Tooling: The Overlord Framework
-The project utilizes a custom Python-based framework (`overlord.py`) designed for high-frequency interaction with modern iOS devices.
-
-### Components
-*   **USB Race Engine:** High-frequency polling (2ms intervals) to exploit timing side-channels.
-*   **Captive Portal Server:** Flask-based host for delivering WebKit payloads and logging discovery data.
-*   **Signage Module:** OpenSSL integration for signing records with the FDR-LOCAL ECDSA key.
-*   **Traffic Logger:** Passive sniffer for monitoring device-to-server handshakes.
-
----
-
-## Next Milestones
-
-> [!IMPORTANT]
-> **A14 Timing Window:** The timing for the race condition on that chip is significantly tighter than the A12. Users may require high-quality USB-C cables to maintain the necessary polling frequency.
-
-1.  **Automated Signature Merging:** Finalize the script to inject Base64 FDR signatures into template plists.
-2.  **Timing Optimization:** Tune the USB race loop specifically for the A14's faster SEP response time.
-3.  **Syslog Monitoring:** Map `mobileactivationd` error codes to specific binary offsets identified in Path 4.
-
----
-# 1. Open Terminal and enter the following command:**
-    'openssl ecparam -name prime256v1 -genkey -noout -out root_ca.key'
-* **This generates a private key using the NIST P-256 elliptic curve**
-
-# 2. Creating the Root Certificate
-    'openssl req -x509 -new -nodes -key root_ca.key -sha256 -days 3650 -out root_ca.crt'
-  **This turns your private key into a "Birth Certificate" for your fake server.**
-# 3. Identify the Target
-     'idevice_id -l'
-# 4. Querying Lockdown State.
-     'ideviceinfo -q com.apple.mobile.lockdown -k ActivationState'
-   **This specifically asks the phone it's current activation status.**
-# 5. Starting Activation Services
-    'lockdown = create_using_usbmux() activation_service = MobileActivationService(lockdown)'
-   **This creates a bridge to mobileactivationd (the iOS daemon that handles the "Hello" screen).**
-# 6. Setup Nonce Request
-    'session_info = activation_service.get_activation_session_info()'
-   **Requests a Nonce (Number used Once) from the phone**
-## Phase 4: Dealing with FDR (Field Data Recovery)
-    'openssl dgst -sha256 -sign fdr_private.key -out signature.bin hardware_data.plist'
-**Modern iPhones (especially those with FaceID/TouchID) require FDR records, This signs the hardware manifest (serial numbers for your screen, battery, etc.).**
-## Phase 5
-    'idevicesyslog | grep -E "mobileactivationd|SBMainWorkspace" '
- * **The bypass relies on a timing window where the Setup.app thinks it's activated but SpringBoard (the home screen) hasn't checked yet.**
----
-
-# Summary Table for Rookies
-| Command Prefix | Domain | Purpose |
-| :--- | :--- | :--- |
-| `openssl` | Security | Creating the fake "Apple" keys and certificates. |
-| `idevice_...` | Connection | Low-level talk with the phone via USB. |
-| `pymobiledevice3` | Interaction | High-level triggers (reboot, start activation). |
-| `fdr_signer` | Hardware | Proving the internal components are "legit." |
-
-
-
-
-
-## Coded by Thinkintosh77, Public use no rebranding
-## May/12/2026-2:42AM
-
+1.  **Initialize Environment:**
+    ```bash
+    ./setup_workspace2.sh
+    ```
+2.  **Generate Target Payload:**
+    ```bash
+    python3 generate_payload.py --serial [SERIAL] --udid [UDID]
+    ```
+3.  **Initiate Race (A14 Optimized):**
+    ```bash
+    sudo nice -n -20 python3 overlord.py
+    
+## Technical Notes
+* **Hacktivation vs. Tethered:** This tool targets a Hacktivation state. It caches a "Success" ticket in the device's local filesystem to skip the "Hello" screen.
+* **XPC Timeouts:** If the logs show a timeout (especially on 26.4.1+), the USB latency is too high. Ensure you are using high-speed USB-C and the `nice -n -20` priority flag.
