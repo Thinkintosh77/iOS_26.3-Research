@@ -1,5 +1,11 @@
 # iOS 26.3/26.3.1 Research 
 
+## FOR TESTERS
+**Download the .zip file and cd into it and open the terminal**
+Then make it executable by running `chmod +x thinkintosh.sh`
+Run the tool as `sudo ./thinkintosh.sh`
+
+---
 This private framework is designed to analyze and exploit the **Gatekeeper Lag** in the iOS activation state machine. By leveraging a high-frequency USB injection race, it allows for research into Hacktivation and state-injection bypasses on A14 and A12X/Z hardware, A Public Open-Source research framework with `.py` and `.sh` files created for analyzing iOS 26.3 security mechanisms. This project is designed to be advanced through the collective intelligence of the setupa12 community.
 
 **Disclaimer:** This research is conducted for educational and security analysis purposes only. All testing is performed on owner-controlled hardware.
